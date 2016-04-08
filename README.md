@@ -5,7 +5,7 @@ under construction!
 ![screenshot](https://cloud.githubusercontent.com/assets/1708549/14311902/c6ce61ec-fc24-11e5-8018-5e3aaf98b6d3.png)
 
 ## Algorithm
-<img width="359" alt="2016-04-07 11 15 34" src="https://cloud.githubusercontent.com/assets/1708549/14338417/1d18b66e-fcb2-11e5-8fd2-a86b092edfb2.png">
+<img width="371" alt="2016-04-08 19 00 14" src="https://cloud.githubusercontent.com/assets/1708549/14380751/2fec7856-fdbc-11e5-9ac0-17650fc74f34.png">
 
 ## Requirements:
 - python 2.7
