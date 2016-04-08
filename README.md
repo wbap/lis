@@ -76,7 +76,11 @@ You can watch reward history:
 cd python-agent
 python plot_reward_log.py
 ```
+
 <img width="400" alt="screenshot" src="https://cloud.githubusercontent.com/assets/1708549/14384486/46ace0b6-fdd6-11e5-86be-3eda63712ebe.png">
+
+This graph is "sample" scene result. It takes about 6 hours on GPU Machine.
+
 
 [Sample scene result movie](https://www.youtube.com/watch?v=7Ein1hRUQ_U)
 
