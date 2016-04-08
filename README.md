@@ -78,7 +78,10 @@ python plot_reward_log.py
 ```
 <img width="400" alt="screenshot" src="https://cloud.githubusercontent.com/assets/1708549/14384486/46ace0b6-fdd6-11e5-86be-3eda63712ebe.png">
 
-[result movie](https://www.youtube.com/watch?v=7Ein1hRUQ_U)
+[Sample scene result movie](https://www.youtube.com/watch?v=7Ein1hRUQ_U)
+
+[SampleLikesAndDislikes scene result movie](https://www.youtube.com/watch?v=IERCgdG1_fw)
+
 
 ## System Architecture
 
