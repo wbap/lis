@@ -1,4 +1,3 @@
-under construction!
 # LIS (Life in Silico)
 =============
 
@@ -25,7 +24,7 @@ sudo sh unity-editor-installer-5.1.0f3+2015082501.sh
 sudo apt-get install lib32stdc++6 -y
 ```
 
-install python modules
+install python modules:
 ```
 pip install chainer
 pip install ws4py
@@ -36,7 +35,7 @@ pip install msgpack-python
 ### Mac
 Install Unity. (if you are going to use Ubuntu for GPU pwer, I reccomend install Unity 5.1.0 linux experimental-build version)
 
-install python modules
+install python modules:
 ```
 pip install chainer
 pip install ws4py
@@ -62,7 +61,7 @@ cd python-agent
 python server.py
 ```
 
-Open unity-sample-environment in Unity and load Scenes/sample
+Open unity-sample-environment in Unity and load Scenes/sample.
 
 ![screenshot from 2016-04-06 18 08 31](https://cloud.githubusercontent.com/assets/1708549/14311462/990e607e-fc22-11e5-84cf-26c049482afc.png)
 
