@@ -64,16 +64,15 @@ class CnnDqnAgent(object):
     def agent_step(self, reward, observation):
         obs_array = np.r_[self.feature_extractor.feature(observation["image"]), observation["depth"]]
 
-        # TODO Check algorithm
-        obs_processed = np.maximum(obs_array, self.last_observation)  # Take maximum from two frames
+        #obs_processed = np.maximum(obs_array, self.last_observation)  # Take maximum from two frames
 
         # Compose State : 4-step sequential observation
         if self.q_net.hist_size == 4:
-            self.state = np.asanyarray([self.state[1], self.state[2], self.state[3], obs_processed], dtype=np.uint8)
+            self.state = np.asanyarray([self.state[1], self.state[2], self.state[3], obs_array], dtype=np.uint8)
         elif self.q_net.hist_size == 2:
-            self.state = np.asanyarray([self.state[1], obs_processed], dtype=np.uint8)
+            self.state = np.asanyarray([self.state[1], obs_array], dtype=np.uint8)
         elif self.q_net.hist_size == 1:
-            self.state = np.asanyarray([obs_processed], dtype=np.uint8)
+            self.state = np.asanyarray([obs_array], dtype=np.uint8)
         else:
             print("self.DQN.hist_size err")
 
