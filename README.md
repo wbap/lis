@@ -1,5 +1,5 @@
 under construction!
-# Machine Learning Agent for Unity
+# Life in Silico
 =============
 
 ![screenshot](https://cloud.githubusercontent.com/assets/1708549/14311902/c6ce61ec-fc24-11e5-8018-5e3aaf98b6d3.png)
@@ -116,4 +116,8 @@ Set "Time Scale" to 100. This will make simulation more faster, but GUI response
 
 
 ## License
-This program was made by [DWANGO ARTIFICIAL INTELLIGENCE LABORATORY](http://ailab.dwango.co.jp/en/) and lab member [Masayoshi Nakamura](http://masayosshi.com/)
++ Apache License, Version 2.0
++ This framework was made by [DWANGO ARTIFICIAL INTELLIGENCE LABORATORY](http://ailab.dwango.co.jp/en/) and lab member [Masayoshi Nakamura](http://masayosshi.com/)
+
+## Notice
+If you created intelligent agents, please let me know about it to "masayoshi_nakamura@dwango.co.jp". We will make showcase varied intelligent agents.
