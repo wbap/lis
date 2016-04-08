@@ -214,6 +214,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			float horizontal = 0;
 			float vertical = m_agent.action.forward*power + CrossPlatformInputManager.GetAxis("Vertical");
 			m_Jump = m_Jump || m_agent.action.jump;
+			if (m_Jumping) {
+				m_Jump = false;
+			}
 
 			//m_agent._actAppliedCnt++;
             bool waswalking = m_IsWalking;
