@@ -33,6 +33,7 @@ namespace MLPlayer {
 		float episodeStartTime = 0f;
 
 		public static ManualResetEvent received = new ManualResetEvent(false);
+		private Vector3 FirstLocation;
 
 		void OnMassage(string msg) {
 			agent.action.Set (msg);
@@ -53,11 +54,12 @@ namespace MLPlayer {
 			episodeStartTime = Time.time;
 
 			environment.OnReset ();
-			agent.transform.position = new Vector3 (0,0,0);
+			agent.transform.position = FirstLocation;
 			agent.StartEpisode ();
 		}
 
 		void Start () {
+			FirstLocation = agent.transform.position;
 			StartNewEpisode ();
 			ws = new WebSocketSharp.WebSocket (url);
 			Debug.Log("connecting... " + url);
