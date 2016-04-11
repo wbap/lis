@@ -3,6 +3,8 @@
 import six.moves.cPickle as pickle
 import copy
 import os
+import os.path
+from PIL import Image
 import numpy as np
 from chainer import cuda
 
@@ -17,24 +19,44 @@ class CnnDqnAgent(object):
 
     actions = [0, 1, 2]
 
-    cnn_feature_extractor = 'alexnet_feature_extractor.pickle'
-    model = 'bvlc_alexnet.caffemodel'
-    model_type = 'alexnet'
-    image_feature_dim = 256 * 6 * 6
+    mean_file = 'ilsvrc_2012_mean.npy'
+    mean_name, ext = os.path.splitext(mean_file)
+
+    '''
+    #AlexNet
+    in_size = 227
+    model_file = 'bvlc_alexnet.caffemodel'
+    feature_name = 'pool5'
+    '''
+
+    #GoogLeNet
+    in_size = 224
+    model_file = 'bvlc_googlenet.caffemodel'
+    feature_name = 'pool5/7x7_s1' #aka loss3/fc
+
+    model_name, ext = os.path.splitext(model_file)
+
+    cnn_feature_extractor = model_name + '.' + mean_name + '.' + feature_name + '.extractor.pickle'
+    cnn_feature_extractor = cnn_feature_extractor.replace('/', '_')
 
     def agent_init(self, **options):
         self.use_gpu = options['use_gpu']
-        self.depth_image_dim = options['depth_image_dim']
-        self.q_net_input_dim = self.image_feature_dim + self.depth_image_dim
 
         if os.path.exists(self.cnn_feature_extractor):
             print("loading... " + self.cnn_feature_extractor),
             self.feature_extractor = pickle.load(open(self.cnn_feature_extractor))
             print("done")
         else:
-            self.feature_extractor = CnnFeatureExtractor(self.use_gpu, self.model, self.model_type, self.image_feature_dim)
+            self.feature_extractor = CnnFeatureExtractor(self.use_gpu,
+                self.model_file, self.in_size, self.mean_file, self.feature_name)
             pickle.dump(self.feature_extractor, open(self.cnn_feature_extractor, 'w'))
             print("pickle.dump finished")
+
+        #One-time FF to get the feature length
+        image = Image.new("RGB", (256, 256)) # dummy image
+        self.image_feature_dim = self.feature_extractor.feature(image).size
+        self.depth_image_dim = options['depth_image_dim']
+        self.q_net_input_dim = self.image_feature_dim + self.depth_image_dim
 
         self.time = 0
         self.epsilon = 1.0  # Initial exploratoin rate

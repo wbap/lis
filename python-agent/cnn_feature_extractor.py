@@ -10,48 +10,39 @@ from chainer.links import caffe
 
 
 class CnnFeatureExtractor:
-    def __init__(self, gpu, model, model_type, out_dim):
+    def __init__(self, gpu, model_file, in_size, mean_file, feature_name):
         self.gpu = gpu
-        self.model = 'bvlc_alexnet.caffemodel'
-        self.model_type = 'alexnet'
+        self.model_file = model_file
+        self.mean_file = mean_file
+        self.feature_name = feature_name
+        self.in_size = in_size
         self.batchsize = 1
-        self.out_dim = out_dim
 
         if self.gpu >= 0:
             cuda.check_cuda_available()
 
-        print('Loading Caffe model file %s...' % self.model, file = sys.stderr)
-        self.func = caffe.CaffeFunction(self.model)
+        print('Loading Caffe model file %s...' % self.model_file, file = sys.stderr)
+        self.func = caffe.CaffeFunction(self.model_file)
         print('Loaded', file=sys.stderr)
         if self.gpu >= 0:
             cuda.get_device(self.gpu).use()
             self.func.to_gpu()
 
-        if self.model_type == 'alexnet':
-            self.in_size = 227
-            mean_image = np.load('ilsvrc_2012_mean.npy')
-            del self.func.layers[15:23]
-            self.outname = 'pool5'
-            #del self.func.layers[13:23]
-            #self.outname = 'conv5'
+        mean_image = np.load(self.mean_file)
+        self.mean_image = self.crop(mean_image)
 
-            
-        cropwidth = 256 - self.in_size
-        start = cropwidth // 2
-        stop = start + self.in_size
-        self.mean_image = mean_image[:, start:stop, start:stop].copy()
-    
     def forward(self, x, t):
-        y, = self.func(inputs={'data': x}, outputs=[self.outname], train=False)
+        y, = self.func(inputs={'data': x}, outputs=[self.feature_name], train=False)
         return F.softmax_cross_entropy(y, t), F.accuracy(y, t)
-                
+
     def predict(self, x):
-        y, = self.func(inputs={'data': x}, outputs=[self.outname], train=False)
+        y, = self.func(inputs={'data': x}, outputs=[self.feature_name], train=False)
         return F.softmax(y)
 
     def feature(self, camera_image):
         x_batch = np.ndarray((self.batchsize, 3, self.in_size, self.in_size), dtype=np.float32)
         image = np.asarray(camera_image).transpose(2, 0, 1)[::-1].astype(np.float32)
+        image = self.crop(image)
         image -= self.mean_image
 
         x_batch[0] = image
@@ -60,20 +51,24 @@ class CnnFeatureExtractor:
 
         if self.gpu >= 0:
             x_data=cuda.to_gpu(x_data)
-        
+
         x = chainer.Variable(x_data, volatile=True)
         feature = self.predict(x)
+        feature = feature.data
 
         if self.gpu >= 0:
-            feature = cuda.to_cpu(feature.data)
-            feature = feature.reshape(self.out_dim)
-        else:
-            feature = feature.data.reshape(self.out_dim)
+            feature = cuda.to_cpu(feature)
+        feature = self.vec(feature)
 
         return feature * 255.0
 
-     
+    def crop(self, image):
+        #assume image is square
+        cropwidth = image.shape[1] - self.in_size
+        start = cropwidth // 2
+        stop = start + self.in_size
+        return image[:, start:stop, start:stop].copy()
 
-
-    
-
+    #vectrization, or mat[:] in MATLAB
+    def vec(self, mat):
+        return mat.reshape(mat.size)
