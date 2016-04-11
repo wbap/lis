@@ -26,10 +26,7 @@ sudo apt-get install lib32stdc++6 -y
 
 install python modules:
 ```
-pip install chainer
-pip install ws4py
-pip install cherrypy
-pip install msgpack-python
+pip install -r python-agent/requirements.txt
 ```
 
 ### Mac
@@ -37,10 +34,7 @@ Install Unity. (if you are going to use Ubuntu for GPU pwer, I reccomend install
 
 install python modules:
 ```
-pip install chainer
-pip install ws4py
-pip install cherrypy
-pip install msgpack-python
+pip install -r python-agent/requirements.txt
 ```
 
 ### Windows
