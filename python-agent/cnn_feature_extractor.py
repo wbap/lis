@@ -43,7 +43,7 @@ class CnnFeatureExtractor:
                 
     def predict(self, x):
         y, = self.func(inputs={'data': x}, outputs=[self.outname], train=False)
-        return F.softmax(y)
+        return y
 
     def feature(self, camera_image):
         x_batch = np.ndarray((self.batchsize, 3, self.in_size, self.in_size), dtype=np.float32)
