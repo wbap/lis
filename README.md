@@ -11,14 +11,14 @@
 
 ## Install
 ### Ubuntu 
-Install Unity (experimental-build version):
+Install [Unity experimental-build version](http://forum.unity3d.com/threads/unity-on-linux-release-notes-and-known-issues.350256/):
 
 ```
-wget http://download.unity3d.com/download_unity/unity-editor-installer-5.1.0f3+2015082501.sh
-sudo sh unity-editor-installer-5.1.0f3+2015082501.sh
+wget http://download.unity3d.com/download_unity/linux/unity-editor-installer-5.3.4f1+20160317.sh
+sudo sh unity-editor-installer-5.3.4f1+20160317.sh
 
 # run Unity
-./unity-editor-5.1.0f3/Editor/Unity
+./unity-editor-5.3.4f1/Editor/Unity
 
 # if background is pink, install:
 sudo apt-get install lib32stdc++6 -y
