@@ -68,9 +68,9 @@ class QNet:
 
         for i in xrange(num_of_batch):
             if not episode_end[i][0]:
-                tmp_ = np.sign(reward[i]) + self.gamma * max_q_dash[i]
+                tmp_ = reward[i] + self.gamma * max_q_dash[i]
             else:
-                tmp_ = np.sign(reward[i])
+                tmp_ = reward[i]
 
             action_index = self.action_to_index(action[i])
             target[i, action_index] = tmp_
