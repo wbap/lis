@@ -40,14 +40,10 @@ class CnnFeatureExtractor:
         start = cropwidth // 2
         stop = start + self.in_size
         self.mean_image = mean_image[:, start:stop, start:stop].copy()
-    
-    def forward(self, x, t):
-        y, = self.func(inputs={'data': x}, outputs=[self.outname], train=False)
-        return F.softmax_cross_entropy(y, t), F.accuracy(y, t)
                 
     def predict(self, x):
         y, = self.func(inputs={'data': x}, outputs=[self.outname], train=False)
-        return F.softmax(y)
+        return y
 
     def feature(self, camera_image):
         x_batch = np.ndarray((self.batchsize, 3, self.in_size, self.in_size), dtype=np.float32)

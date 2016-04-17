@@ -37,27 +37,22 @@ namespace MLPlayer {
 
 			while (true) {
 				ws.Connect ();
-				//Debug.Log("Connected:" + url);
 
 				while (!ws.IsConnected) {
-					//Debug.Log("not connected:" + url);
 					Thread.Sleep(1000);
 				}
 
 				while (ws.IsConnected) {
 					byte[] data = PopAgentState();
 					if(data != null) {
-						//Debug.Log("Sending Agent Data...");
 						ws.Send(data);
 					}
-					// wait
 					Thread.Sleep(8);
 				}
 			}
 		}
 
 		private void OnMassage(string msg) {
-			//Debug.Log("Got msg from AI:" + msg);
 			PushAIMessage(msg);
 		}
 
@@ -128,32 +123,31 @@ namespace MLPlayer {
 		private AIClient client;
 		private float lastSendTime;
 		private float episodeStartTime = 0f;
+		private Vector3 FirstLocation;
 
 		void Start () {
 			Application.targetFrameRate = (int)Mathf.Max(60.0f, 60.0f * timeScale);
 
 			client = new AIClient(url);
+			FirstLocation = agent.transform.position;
 			StartNewEpisode ();
 			lastSendTime = -cycleTimeStepSize;
 		}
 
 		void OnCycleUpdateAfterReceiveAction() {
-			//Debug.Log ("OnCycleUpdateAfterReceiveAction");
 			agent.ResetState ();
 		}
 
 		public void TimeOver() {
-			//Debug.Log ("TimeOver");
 			agent.AddReward (0);
 			agent.EndEpisode ();
 		}
 
 		void StartNewEpisode() {
-			//Debug.Log ("StartNewEpisode");
 			episodeStartTime = Time.time;
 
 			environment.OnReset ();
-			agent.transform.position = new Vector3 (0,0,0);
+			agent.transform.position = FirstLocation;
 			agent.StartEpisode ();
 		}
 
@@ -163,10 +157,8 @@ namespace MLPlayer {
 
 			string msg = client.PopAIMessage();
 			if(msg != null) {
-				//Debug.Log("Got message from AI");
 				agent.action.Set(msg);
 				OnCycleUpdateAfterReceiveAction();
-				//Debug.Log ("The World is now moving...");
 				Time.timeScale = timeScale;
 			}
 
@@ -180,9 +172,7 @@ namespace MLPlayer {
 					StartNewEpisode ();
 				}
 				agent.UpdateState ();
-				//Debug.Log("Push Agent data");
 				client.PushAgentState(agent.state);
-				//Debug.Log ("Stop The World!");
 				Time.timeScale = 0.0f;
 			}
 		}
