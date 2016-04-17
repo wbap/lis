@@ -4,6 +4,101 @@ using System.Threading;
 using MsgPack;
 
 namespace MLPlayer {
+
+	public class AIClient {
+
+		private Queue<byte[]> agentMessageQueue;
+		private Queue<string> aiMessageQueue;
+		private string url;
+		private Thread th;
+		private Mutex mutAgent;
+		private Mutex mutAi;
+		private MsgPack.CompiledPacker packer;
+
+		public AIClient (string _url) {
+			url = _url;
+			mutAgent = new Mutex();
+			mutAi = new Mutex();
+			packer = new MsgPack.CompiledPacker();
+			agentMessageQueue = new Queue<byte[]>();
+			aiMessageQueue = new Queue<string>();
+			th = new Thread(new ThreadStart(ExecuteInForeground));
+			th.Start(this);
+		}
+
+		private void ExecuteInForeground() {
+
+			WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket (url);
+			Debug.Log("connecting... " + url);
+
+			ws.OnMessage += (sender, e) => OnMassage(e.Data);
+			// if using binary 
+			//ws.OnMessage += (sender, e) => OnMassage(e.RawData);
+
+			while (true) {
+				ws.Connect ();
+				//Debug.Log("Connected:" + url);
+
+				while (!ws.IsConnected) {
+					//Debug.Log("not connected:" + url);
+					Thread.Sleep(1000);
+				}
+
+				while (ws.IsConnected) {
+					byte[] data = PopAgentState();
+					if(data != null) {
+						//Debug.Log("Sending Agent Data...");
+						ws.Send(data);
+					}
+					// wait
+					Thread.Sleep(8);
+				}
+			}
+		}
+
+		private void OnMassage(string msg) {
+			//Debug.Log("Got msg from AI:" + msg);
+			PushAIMessage(msg);
+		}
+
+		public void PushAgentState(State s) {
+			byte[] msg = packer.Pack(s);
+			mutAgent.WaitOne();
+			agentMessageQueue.Enqueue(msg);
+			mutAgent.ReleaseMutex();
+		}
+
+		public void PushAIMessage(string msg) {
+			mutAi.WaitOne();
+			aiMessageQueue.Enqueue(msg);
+			mutAi.ReleaseMutex();
+		}
+
+		public string PopAIMessage() {
+			string received = null;
+
+			mutAi.WaitOne();
+			if( aiMessageQueue.Count > 0 ) {
+				received = aiMessageQueue.Dequeue();
+			}
+			mutAi.ReleaseMutex();
+
+			return received;
+		}
+
+		public byte[] PopAgentState() {
+			byte[] received = null;
+
+			mutAgent.WaitOne();
+			if( agentMessageQueue.Count > 0 ) {
+				received = agentMessageQueue.Dequeue();
+			}
+			mutAgent.ReleaseMutex();
+
+			return received;
+		}
+	}
+
 	public class SceneController : MonoBehaviour {
 
 		// singleton
@@ -24,26 +119,31 @@ namespace MLPlayer {
 		[SerializeField] string url;
 		[SerializeField] float cycleTimeStepSize;
 		[SerializeField] float episodeTimeLength;
+		[Range(0.1f, 10.0f)]
+		[SerializeField] float timeScale = 1.0f;
 
 		[SerializeField] Agent agent;
 		[SerializeField] Environment environment;
 
-		WebSocketSharp.WebSocket ws;
-		float lastSendTime;
-		float episodeStartTime = 0f;
+		private AIClient client;
+		private float lastSendTime;
+		private float episodeStartTime = 0f;
 
-		public static ManualResetEvent received = new ManualResetEvent(false);
+		void Start () {
+			Application.targetFrameRate = (int)Mathf.Max(60.0f, 60.0f * timeScale);
 
-		void OnMassage(string msg) {
-			agent.action.Set (msg);
-			received.Set();
+			client = new AIClient(url);
+			StartNewEpisode ();
+			lastSendTime = -cycleTimeStepSize;
 		}
 
 		void OnCycleUpdateAfterReceiveAction() {
+			//Debug.Log ("OnCycleUpdateAfterReceiveAction");
 			agent.ResetState ();
 		}
 
 		public void TimeOver() {
+			//Debug.Log ("TimeOver");
 			agent.AddReward (0);
 			agent.EndEpisode ();
 		}
@@ -57,25 +157,19 @@ namespace MLPlayer {
 			agent.StartEpisode ();
 		}
 
-		void Start () {
-			StartNewEpisode ();
-			ws = new WebSocketSharp.WebSocket (url);
-			Debug.Log("connecting... " + url);
-			ws.Connect ();
 
-			ws.OnMessage += (sender, e) => OnMassage(e.Data);
-			// if using binary 
-			//ws.OnMessage += (sender, e) => OnMassage(e.RawData);
+		void Update() {
+			Application.targetFrameRate = (int)Mathf.Max(60.0f, 60.0f * timeScale);
 
-			lastSendTime = -cycleTimeStepSize;
-		}
-
-		void FixedUpdate () {
-			if (!ws.IsConnected) {
-				Debug.Log("not connected:" + url);
-				return;
+			string msg = client.PopAIMessage();
+			if(msg != null) {
+				//Debug.Log("Got message from AI");
+				agent.action.Set(msg);
+				OnCycleUpdateAfterReceiveAction();
+				//Debug.Log ("The World is now moving...");
+				Time.timeScale = timeScale;
 			}
-			
+
 			if (lastSendTime + cycleTimeStepSize <= Time.time) {
 				lastSendTime = Time.time;
 
@@ -86,15 +180,10 @@ namespace MLPlayer {
 					StartNewEpisode ();
 				}
 				agent.UpdateState ();
-
-				var packer = new MsgPack.CompiledPacker();
-				byte[] msg = packer.Pack(agent.state);
-
-				received.Reset();
-				ws.Send(msg);
-				received.WaitOne();
-
-				OnCycleUpdateAfterReceiveAction();
+				//Debug.Log("Push Agent data");
+				client.PushAgentState(agent.state);
+				//Debug.Log ("Stop The World!");
+				Time.timeScale = 0.0f;
 			}
 		}
 	}

@@ -8,6 +8,8 @@ namespace MLPlayer {
 	public class Agent : MonoBehaviour {
 		[SerializeField] Camera camera;
 		[SerializeField] Camera depthCamera;
+		[SerializeField] Texture2D image;
+		[SerializeField] Texture2D depth;
 
 		public Action action { set; get; }
 		public State state { set; get; }
@@ -21,8 +23,8 @@ namespace MLPlayer {
 
 		public void UpdateState ()
 		{
-			state.image = GetCameraImage (camera);
-			state.depth = GetCameraImage (depthCamera);
+			state.image = GetCameraImage (camera, ref image);
+			state.depth = GetCameraImage (depthCamera, ref depth);
 		}
 		
 		public void ResetState ()
@@ -43,25 +45,25 @@ namespace MLPlayer {
 		public void Start() {
 			action = new Action ();
 			state = new State ();
+			image = new Texture2D(camera.targetTexture.width, camera.targetTexture.height,
+				TextureFormat.RGB24, false);
+			depth = new Texture2D(depthCamera.targetTexture.width, depthCamera.targetTexture.height,
+				TextureFormat.RGB24, false);
 
 			depthCamera.depthTextureMode = DepthTextureMode.Depth;
 			depthCamera.SetReplacementShader(Shader.Find("Custom/ReplacementShader"), "");
 		}
 
 
-		public byte[] GetCameraImage(Camera cam) {
+		public byte[] GetCameraImage(Camera cam, ref Texture2D tex) {
 			RenderTexture currentRT = RenderTexture.active;
 			RenderTexture.active = cam.targetTexture;
 			cam.Render();
-			Texture2D image = new Texture2D(cam.targetTexture.width, cam.targetTexture.height,
-			                                TextureFormat.RGB24, false);
-			image.ReadPixels(new Rect(0, 0, cam.targetTexture.width, cam.targetTexture.height), 0, 0);
-			image.Apply();
+			tex.ReadPixels(new Rect(0, 0, cam.targetTexture.width, cam.targetTexture.height), 0, 0);
+			tex.Apply();
 			RenderTexture.active = currentRT;
-			byte[] bytes = image.EncodeToPNG ();
-			Destroy (image);
 
-			return bytes;
+			return tex.EncodeToPNG ();
 		}
 	}
 }
