@@ -94,24 +94,23 @@ namespace MLPlayer {
 		}
 	}
 
-
 	public class SceneControllerAsync : MonoBehaviour {
 
 		// singleton
-		protected static SceneController instance;
-		public static SceneController Instance {
+		protected static SceneControllerAsync instance;
+		public static SceneControllerAsync Instance {
 			get {
 				if(instance == null) {
-					instance = (SceneController) FindObjectOfType(typeof(SceneController));
+					instance = (SceneControllerAsync) FindObjectOfType(typeof(SceneControllerAsync));
 					if (instance == null) {
-						Debug.LogError("An instance of " + typeof(SceneController) + 
-							" is needed in the scene, but there is none.");
+						Debug.LogError("An instance of " + typeof(SceneControllerAsync) + 
+						               " is needed in the scene, but there is none.");
 					}
 				}
 				return instance;
 			}
 		}
-
+		
 		[SerializeField] string url;
 		[SerializeField] float cycleTimeStepSize;
 		[SerializeField] float episodeTimeLength;

@@ -10,7 +10,10 @@ namespace MLPlayer {
 				other.GetComponent<Agent> ().AddReward (reward);
 				gameObject.SetActive (false);
 				Debug.Log ("ResetEvent reward:" + reward.ToString ());
+
+				// TODO: merge
 				SceneController.Instance.TimeOver();
+				SceneControllerAsync.Instance.TimeOver();
 			}
 		}
 		
