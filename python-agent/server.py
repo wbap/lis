@@ -41,17 +41,20 @@ class AgentServer(WebSocket):
     log_file = 'reward.log'
     reward_sum = 0
     depth_image_dim = 32 * 32
+    depth_image_count = 4
 
     def received_message(self, m):
         payload = m.data
-
         dat = msgpack.unpackb(payload)
-        image = Image.open(io.BytesIO(bytearray(dat['image'])))
-        depth = Image.open(io.BytesIO(bytearray(dat['depth'])))
-        # depth.save("depth_" + str(self.cycle_counter) + ".png")
-        # image.save("image_" + str(self.cycle_counter) + ".png")
+        
+        image = []
+        for i in xrange(4):
+            image.append(Image.open(io.BytesIO(bytearray(dat['image'][i]))))
+        depth = []
+        for i in xrange(4):
+            d = (Image.open(io.BytesIO(bytearray(dat['depth'][i]))))
+            depth.append(np.array(ImageOps.grayscale(d)).reshape(self.depth_image_dim))
 
-        depth = np.array(ImageOps.grayscale(depth)).reshape(self.depth_image_dim)
         observation = {"image": image, "depth": depth}
         reward = dat['reward']
         end_episode = dat['endEpisode']
@@ -61,7 +64,7 @@ class AgentServer(WebSocket):
             print ("initializing agent...")
             self.agent.agent_init(
                 use_gpu=args.gpu,
-                depth_image_dim=self.depth_image_dim)
+                depth_image_dim=self.depth_image_dim * self.depth_image_count)
 
             action = self.agent.agent_start(observation)
             self.send(str(action))
@@ -86,6 +89,7 @@ class AgentServer(WebSocket):
                 self.agent.agent_step_update(reward, action, eps, q_now, obs_array)
 
         self.thread_event.set()
+
 
 cherrypy.config.update({'server.socket_port': args.port})
 WebSocketPlugin(cherrypy.engine).subscribe()

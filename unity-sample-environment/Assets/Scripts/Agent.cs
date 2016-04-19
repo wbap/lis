@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using WebSocketSharp;
 using System.Threading;
 
 namespace MLPlayer {
 	public class Agent : MonoBehaviour {
-		[SerializeField] Camera camera;
-		[SerializeField] Camera depthCamera;
-		[SerializeField] Texture2D image;
-		[SerializeField] Texture2D depth;
+		[SerializeField] List<Camera> rgbCameras;
+		[SerializeField] List<Camera> depthCameras;
+		[SerializeField] List<Texture2D> rgbImages;
+		[SerializeField] List<Texture2D> depthImages;
 
 		public Action action { set; get; }
 		public State state { set; get; }
@@ -23,8 +23,16 @@ namespace MLPlayer {
 
 		public void UpdateState ()
 		{
-			state.image = GetCameraImage (camera, ref image);
-			state.depth = GetCameraImage (depthCamera, ref depth);
+			state.image = new byte[rgbCameras.Count][];
+			for (int i=0; i<rgbCameras.Count; i++) {
+				Texture2D txture = rgbImages [i];
+				state.image[i] = GetCameraImage (rgbCameras[i], ref txture);
+			}
+			state.depth = new byte[depthCameras.Count][];
+			for (int i=0; i<depthCameras.Count; i++) {
+				Texture2D txture = depthImages [i];
+				state.depth[i] = GetCameraImage (depthCameras[i], ref txture);
+			}
 		}
 		
 		public void ResetState ()
@@ -45,13 +53,22 @@ namespace MLPlayer {
 		public void Start() {
 			action = new Action ();
 			state = new State ();
-			image = new Texture2D(camera.targetTexture.width, camera.targetTexture.height,
-				TextureFormat.RGB24, false);
-			depth = new Texture2D(depthCamera.targetTexture.width, depthCamera.targetTexture.height,
-				TextureFormat.RGB24, false);
 
-			depthCamera.depthTextureMode = DepthTextureMode.Depth;
-			depthCamera.SetReplacementShader(Shader.Find("Custom/ReplacementShader"), "");
+			rgbImages = new List<Texture2D> (rgbCameras.Capacity);
+			foreach (var cam in rgbCameras) {
+				rgbImages.Add (new Texture2D (cam.targetTexture.width, cam.targetTexture.height,
+					TextureFormat.RGB24, false));
+			}
+			depthImages = new List<Texture2D> (rgbCameras.Capacity);
+			foreach (var cam in depthCameras) {
+				depthImages.Add(new Texture2D (cam.targetTexture.width, cam.targetTexture.height,
+					TextureFormat.RGB24, false));
+			}
+
+			foreach (var cam in depthCameras) {
+				cam.depthTextureMode = DepthTextureMode.Depth;
+				cam.SetReplacementShader (Shader.Find ("Custom/ReplacementShader"), "");
+			}
 		}
 
 
