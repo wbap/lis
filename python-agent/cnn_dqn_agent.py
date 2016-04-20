@@ -23,7 +23,7 @@ class CnnDqnAgent(object):
     image_feature_dim = 256 * 6 * 6
     image_feature_count = 1
 
-    def _osb_to_vec(self, observation):
+    def _observation_to_featurevec(self, observation):
         # TODO clean
         if self.image_feature_count == 1:
             return np.r_[self.feature_extractor.feature(observation["image"][0]),
@@ -59,7 +59,7 @@ class CnnDqnAgent(object):
         self.q_net = QNet(self.use_gpu, self.actions, self.q_net_input_dim)
 
     def agent_start(self, observation):
-        obs_array = self._osb_to_vec(observation)
+        obs_array = self._observation_to_featurevec(observation)
 
         # Initialize State
         self.state = np.zeros((self.q_net.hist_size, self.q_net_input_dim), dtype=np.uint8)
@@ -80,7 +80,7 @@ class CnnDqnAgent(object):
         return return_action
 
     def agent_step(self, reward, observation):
-        obs_array = self._osb_to_vec(observation)
+        obs_array = self._observation_to_featurevec(observation)
 
         #obs_processed = np.maximum(obs_array, self.last_observation)  # Take maximum from two frames
 

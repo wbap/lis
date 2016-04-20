@@ -90,7 +90,6 @@ class AgentServer(WebSocket):
 
         self.thread_event.set()
 
-
 cherrypy.config.update({'server.socket_port': args.port})
 WebSocketPlugin(cherrypy.engine).subscribe()
 cherrypy.tools.websocket = WebSocketTool()
