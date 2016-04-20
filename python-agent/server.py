@@ -44,7 +44,7 @@ class AgentServer(WebSocket):
     depth_image_count = 1
 
     def send_action(self, action):
-        dat = msgpack.packb([{"command": str(action)}])
+        dat = msgpack.packb({"command": str(action)})
         self.send(dat, binary=True)
 
     def received_message(self, m):

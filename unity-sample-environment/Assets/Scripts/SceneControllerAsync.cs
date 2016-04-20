@@ -156,9 +156,7 @@ namespace MLPlayer {
 			byte[] msg = client.PopAIMessage();
 			if(msg != null) {
 				var packer = new MsgPack.BoxingPacker();
-				var res = packer.Unpack(msg);
-				System.Object[] actions = (System.Object[])packer.Unpack(msg);
-				agent.action.Set((Dictionary<System.Object, System.Object>)actions[0]);
+				agent.action.Set ((Dictionary<System.Object, System.Object>)packer.Unpack(msg));
 				OnCycleUpdateAfterReceiveAction();
 				Time.timeScale = timeScale;
 			}
