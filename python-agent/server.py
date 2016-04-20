@@ -41,7 +41,7 @@ class AgentServer(WebSocket):
     log_file = 'reward.log'
     reward_sum = 0
     depth_image_dim = 32 * 32
-    depth_image_count = 4
+    depth_image_count = 1
 
     def received_message(self, m):
         payload = m.data

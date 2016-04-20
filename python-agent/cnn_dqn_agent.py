@@ -21,7 +21,7 @@ class CnnDqnAgent(object):
     model = 'bvlc_alexnet.caffemodel'
     model_type = 'alexnet'
     image_feature_dim = 256 * 6 * 6
-    image_feature_count = 4
+    image_feature_count = 1
 
     def _osb_to_vec(self, observation):
         # TODO clean
