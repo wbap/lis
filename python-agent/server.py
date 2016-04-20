@@ -43,6 +43,10 @@ class AgentServer(WebSocket):
     depth_image_dim = 32 * 32
     depth_image_count = 1
 
+    def send_action(self, action):
+        dat = msgpack.packb([{"command": str(action)}])
+        self.send(dat, binary=True)
+
     def received_message(self, m):
         payload = m.data
         dat = msgpack.unpackb(payload)
@@ -67,7 +71,7 @@ class AgentServer(WebSocket):
                 depth_image_dim=self.depth_image_dim * self.depth_image_count)
 
             action = self.agent.agent_start(observation)
-            self.send(str(action))
+            self.send_action(action)
             with open(self.log_file, 'w') as the_file:
                 the_file.write('cycle, episode_reward_sum \n')
         else:
@@ -78,14 +82,14 @@ class AgentServer(WebSocket):
             if end_episode:
                 self.agent.agent_end(reward)
                 action = self.agent.agent_start(observation)  # TODO
-                self.send(str(action))
+                self.send_action(action)
                 with open(self.log_file, 'a') as the_file:
                     the_file.write(str(self.cycle_counter) +
                                    ',' + str(self.reward_sum) + '\n')
                 self.reward_sum = 0
             else:
                 action, eps, q_now, obs_array = self.agent.agent_step(reward, observation)
-                self.send(str(action))
+                self.send_action(action)
                 self.agent.agent_step_update(reward, action, eps, q_now, obs_array)
 
         self.thread_event.set()
