@@ -35,8 +35,15 @@ namespace MLPlayer {
 		public static ManualResetEvent received = new ManualResetEvent(false);
 		private Vector3 FirstLocation;
 
-		void OnMassage(string msg) {
-			agent.action.Set (msg);
+		void OnMassage(byte[] msg) {
+			var packer = new MsgPack.BoxingPacker();
+			var res = packer.Unpack(msg);
+			System.Object[] actions = (System.Object[])packer.Unpack(msg);
+
+			for (int i = 0; i < 1; i++) {
+				agent.action.Set ((Dictionary<System.Object, System.Object>)actions[i]);
+			}
+
 			received.Set();
 		}
 
@@ -64,10 +71,7 @@ namespace MLPlayer {
 			ws = new WebSocketSharp.WebSocket (url);
 			Debug.Log("connecting... " + url);
 			ws.Connect ();
-
-			ws.OnMessage += (sender, e) => OnMassage(e.Data);
-			// if using binary 
-			//ws.OnMessage += (sender, e) => OnMassage(e.RawData);
+			ws.OnMessage += (sender, e) => OnMassage(e.RawData);
 
 			lastSendTime = -cycleTimeStepSize;
 		}
