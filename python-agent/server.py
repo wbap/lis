@@ -19,6 +19,8 @@ parser.add_argument('--ip', '-i', default='127.0.0.1',
                     help='server ip')
 parser.add_argument('--gpu', '-g', default=-1, type=int,
                     help='GPU ID (negative value indicates CPU)')
+parser.add_argument('--log-file', '-l', default='reward.log', type=str,
+                    help='reward log file name')
 args = parser.parse_args()
 
 
@@ -38,7 +40,7 @@ class AgentServer(WebSocket):
     agent_initialized = False
     cycle_counter = 0
     thread_event = threading.Event()
-    log_file = 'reward.log'
+    log_file = args.log_file
     reward_sum = 0
     depth_image_dim = 32 * 32
     depth_image_count = 1
