@@ -21,11 +21,29 @@ class CnnDqnAgent(object):
     model = 'bvlc_alexnet.caffemodel'
     model_type = 'alexnet'
     image_feature_dim = 256 * 6 * 6
+    image_feature_count = 1
+
+    def _observation_to_featurevec(self, observation):
+        # TODO clean
+        if self.image_feature_count == 1:
+            return np.r_[self.feature_extractor.feature(observation["image"][0]),
+                         observation["depth"][0]]
+        elif self.image_feature_count == 4:
+            return np.r_[self.feature_extractor.feature(observation["image"][0]),
+                         self.feature_extractor.feature(observation["image"][1]),
+                         self.feature_extractor.feature(observation["image"][2]),
+                         self.feature_extractor.feature(observation["image"][3]),
+                         observation["depth"][0],
+                         observation["depth"][1],
+                         observation["depth"][2],
+                         observation["depth"][3]]
+        else:
+            print("not supported: number of camera")
 
     def agent_init(self, **options):
         self.use_gpu = options['use_gpu']
         self.depth_image_dim = options['depth_image_dim']
-        self.q_net_input_dim = self.image_feature_dim + self.depth_image_dim
+        self.q_net_input_dim = self.image_feature_dim * self.image_feature_count + self.depth_image_dim
 
         if os.path.exists(self.cnn_feature_extractor):
             print("loading... " + self.cnn_feature_extractor),
@@ -41,7 +59,7 @@ class CnnDqnAgent(object):
         self.q_net = QNet(self.use_gpu, self.actions, self.q_net_input_dim)
 
     def agent_start(self, observation):
-        obs_array = np.r_[self.feature_extractor.feature(observation["image"]), observation["depth"]]
+        obs_array = self._observation_to_featurevec(observation)
 
         # Initialize State
         self.state = np.zeros((self.q_net.hist_size, self.q_net_input_dim), dtype=np.uint8)
@@ -62,7 +80,7 @@ class CnnDqnAgent(object):
         return return_action
 
     def agent_step(self, reward, observation):
-        obs_array = np.r_[self.feature_extractor.feature(observation["image"]), observation["depth"]]
+        obs_array = self._observation_to_featurevec(observation)
 
         #obs_processed = np.maximum(obs_array, self.last_observation)  # Take maximum from two frames
 
