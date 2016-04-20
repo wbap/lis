@@ -24,14 +24,21 @@ class CnnDqnAgent(object):
     image_feature_count = 4
 
     def _osb_to_vec(self, observation):
-        return np.r_[self.feature_extractor.feature(observation["image"][0]),
-                     self.feature_extractor.feature(observation["image"][1]),
-                     self.feature_extractor.feature(observation["image"][2]),
-                     self.feature_extractor.feature(observation["image"][3]),
-                     observation["depth"][0],
-                     observation["depth"][1],
-                     observation["depth"][2],
-                     observation["depth"][3]]
+        # TODO clean
+        if self.image_feature_count == 1:
+            return np.r_[self.feature_extractor.feature(observation["image"][0]),
+                         observation["depth"][0]]
+        elif self.image_feature_count == 4:
+            return np.r_[self.feature_extractor.feature(observation["image"][0]),
+                         self.feature_extractor.feature(observation["image"][1]),
+                         self.feature_extractor.feature(observation["image"][2]),
+                         self.feature_extractor.feature(observation["image"][3]),
+                         observation["depth"][0],
+                         observation["depth"][1],
+                         observation["depth"][2],
+                         observation["depth"][3]]
+        else:
+            print("not supported: number of camera")
 
     def agent_init(self, **options):
         self.use_gpu = options['use_gpu']

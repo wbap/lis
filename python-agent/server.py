@@ -48,10 +48,10 @@ class AgentServer(WebSocket):
         dat = msgpack.unpackb(payload)
         
         image = []
-        for i in xrange(4):
+        for i in xrange(self.depth_image_count):
             image.append(Image.open(io.BytesIO(bytearray(dat['image'][i]))))
         depth = []
-        for i in xrange(4):
+        for i in xrange(self.depth_image_count):
             d = (Image.open(io.BytesIO(bytearray(dat['depth'][i]))))
             depth.append(np.array(ImageOps.grayscale(d)).reshape(self.depth_image_dim))
 
