@@ -8,7 +8,7 @@ namespace MLPlayer {
 	public class AIClient {
 
 		private Queue<byte[]> agentMessageQueue;
-		private Queue<string> aiMessageQueue;
+		private Queue<byte[]> aiMessageQueue;
 		private string url;
 		private Thread th;
 		private Mutex mutAgent;
@@ -21,7 +21,7 @@ namespace MLPlayer {
 			mutAi = new Mutex();
 			packer = new MsgPack.CompiledPacker();
 			agentMessageQueue = new Queue<byte[]>();
-			aiMessageQueue = new Queue<string>();
+			aiMessageQueue = new Queue<byte[]>();
 			th = new Thread(new ThreadStart(ExecuteInForeground));
 			th.Start(this);
 		}
@@ -31,9 +31,7 @@ namespace MLPlayer {
 			WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket (url);
 			Debug.Log("connecting... " + url);
 
-			ws.OnMessage += (sender, e) => OnMassage(e.Data);
-			// if using binary 
-			//ws.OnMessage += (sender, e) => OnMassage(e.RawData);
+			ws.OnMessage += (sender, e) => OnMassage(e.RawData);
 
 			while (true) {
 				ws.Connect ();
@@ -52,7 +50,7 @@ namespace MLPlayer {
 			}
 		}
 
-		private void OnMassage(string msg) {
+		private void OnMassage(byte[] msg) {
 			PushAIMessage(msg);
 		}
 
@@ -63,14 +61,14 @@ namespace MLPlayer {
 			mutAgent.ReleaseMutex();
 		}
 
-		public void PushAIMessage(string msg) {
+		public void PushAIMessage(byte[] msg) {
 			mutAi.WaitOne();
 			aiMessageQueue.Enqueue(msg);
 			mutAi.ReleaseMutex();
 		}
 
-		public string PopAIMessage() {
-			string received = null;
+		public byte[] PopAIMessage() {
+			byte[] received = null;
 
 			mutAi.WaitOne();
 			if( aiMessageQueue.Count > 0 ) {
@@ -155,9 +153,12 @@ namespace MLPlayer {
 		void Update() {
 			Application.targetFrameRate = (int)Mathf.Max(60.0f, 60.0f * timeScale);
 
-			string msg = client.PopAIMessage();
+			byte[] msg = client.PopAIMessage();
 			if(msg != null) {
-				agent.action.Set(msg);
+				var packer = new MsgPack.BoxingPacker();
+				var res = packer.Unpack(msg);
+				System.Object[] actions = (System.Object[])packer.Unpack(msg);
+				agent.action.Set((Dictionary<System.Object, System.Object>)actions[0]);
 				OnCycleUpdateAfterReceiveAction();
 				Time.timeScale = timeScale;
 			}
