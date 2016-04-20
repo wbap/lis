@@ -20,7 +20,8 @@ class CnnDqnAgent(object):
     cnn_feature_extractor = 'alexnet_feature_extractor.pickle'
     model = 'bvlc_alexnet.caffemodel'
     model_type = 'alexnet'
-    image_feature_dim = 256 * 6 * 6 * 4
+    image_feature_dim = 256 * 6 * 6
+    image_feature_count = 4
 
     def _osb_to_vec(self, observation):
         return np.r_[self.feature_extractor.feature(observation["image"][0]),
@@ -35,7 +36,7 @@ class CnnDqnAgent(object):
     def agent_init(self, **options):
         self.use_gpu = options['use_gpu']
         self.depth_image_dim = options['depth_image_dim']
-        self.q_net_input_dim = self.image_feature_dim + self.depth_image_dim
+        self.q_net_input_dim = self.image_feature_dim * self.image_feature_count + self.depth_image_dim
 
         if os.path.exists(self.cnn_feature_extractor):
             print("loading... " + self.cnn_feature_extractor),
