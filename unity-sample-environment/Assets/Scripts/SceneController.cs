@@ -40,9 +40,7 @@ namespace MLPlayer {
 			var res = packer.Unpack(msg);
 			System.Object[] actions = (System.Object[])packer.Unpack(msg);
 
-			for (int i = 0; i < 1; i++) {
-				agent.action.Set ((Dictionary<System.Object, System.Object>)actions[i]);
-			}
+			agent.action.Set ((Dictionary<System.Object, System.Object>)actions[0]);
 
 			received.Set();
 		}
