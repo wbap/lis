@@ -52,7 +52,7 @@ class AgentServer(WebSocket):
     def received_message(self, m):
         payload = m.data
         dat = msgpack.unpackb(payload)
-        
+
         image = []
         for i in xrange(self.depth_image_count):
             image.append(Image.open(io.BytesIO(bytearray(dat['image'][i]))))

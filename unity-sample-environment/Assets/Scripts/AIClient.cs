@@ -13,9 +13,12 @@ namespace MLPlayer {
 		private Mutex mutAgent;
 		private Mutex mutAi;
 		private MsgPack.CompiledPacker packer;
+		public delegate void OnMessageFunc();
+		OnMessageFunc onMessageFunc;
 
-		public AIClient (string _url) {
+		public AIClient (string _url, OnMessageFunc _onMessageFunc = null) {
 			url = _url;
+			onMessageFunc = _onMessageFunc;
 			mutAgent = new Mutex();
 			mutAi = new Mutex();
 			packer = new MsgPack.CompiledPacker();
@@ -51,6 +54,9 @@ namespace MLPlayer {
 
 		private void OnMassage(byte[] msg) {
 			PushAIMessage(msg);
+			if (onMessageFunc != null) {
+				onMessageFunc();
+			}
 		}
 
 		public void PushAgentState(State s) {

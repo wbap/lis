@@ -197,7 +197,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 370758644}
-  - 114: {fileID: 370758643}
   - 114: {fileID: 370758645}
   m_Layer: 0
   m_Name: SceneController
@@ -206,22 +205,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &370758643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 370758642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8a0d5d1bd73341489981564826c9b64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  url: ws://localhost:8765/ws
-  cycleTimeStepSize: 0.15
-  episodeTimeLength: 15
-  agent: {fileID: 2078493469}
-  environment: {fileID: 2101396359}
 --- !u!4 &370758644
 Transform:
   m_ObjectHideFlags: 0
@@ -240,16 +223,20 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 370758642}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f35cce202312046d8bb7e6e255e6cc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  url: ws://localhost:8765/ws
+  communicationMode: 0
+  domain: localhost
+  path: ws
+  port: 8765
   cycleTimeStepSize: 0.15
   episodeTimeLength: 15
   timeScale: 1
-  agent: {fileID: 2078493469}
+  agents:
+  - {fileID: 2078493469}
   environment: {fileID: 2101396359}
 --- !u!1 &644654425
 GameObject:

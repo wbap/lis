@@ -11,8 +11,6 @@ namespace MLPlayer {
 				gameObject.SetActive (false);
 				Debug.Log ("ResetEvent reward:" + reward.ToString ());
 
-				// TODO: merge
-				SceneController.Instance.TimeOver();
 				SceneControllerAsync.Instance.TimeOver();
 			}
 		}
