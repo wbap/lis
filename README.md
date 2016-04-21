@@ -89,6 +89,12 @@ python multi_agent.py --agent-count=2
 Next, open unity-sample-environment and load Scenes/SampleMultiAgent.
 
 
+You can watch reward history:
+
+```
+python plot_reward_log.py --log-file=reward_0.log
+```
+
 ## System Configuration
 
 - Client: Unity
