@@ -30,7 +30,7 @@ pip install -r python-agent/requirements.txt
 ```
 
 ### Mac
-Install Unity. (if you are going to use Ubuntu for GPU pwer, I reccomend install Unity 5.1.0 linux experimental-build version)
+Install Unity. 
 
 install python modules:
 ```
@@ -39,7 +39,7 @@ pip install -r python-agent/requirements.txt
 
 ### Windows
 
-[超人工生命ハッカソンに向けてWindows10マシンにpython環境を整えた](http://qiita.com/autani/items/4daa5587773631245d86)
+[Building simulator on Windows10](http://qiita.com/autani/items/4daa5587773631245d86) (Japanese)
 
 ## Quick Start
 download data:
@@ -55,7 +55,7 @@ cd python-agent
 python server.py
 ```
 
-Open unity-sample-environment in Unity and load Scenes/sample.
+Open unity-sample-environment with Unity and load Scenes/Sample.
 
 ![screenshot from 2016-04-06 18 08 31](https://cloud.githubusercontent.com/assets/1708549/14311462/990e607e-fc22-11e5-84cf-26c049482afc.png)
 
@@ -79,6 +79,21 @@ This graph is a "sample" scene result. It takes about 6 hours on GPU Machine.
 
 [SampleLikesAndDislikes scene result movie](https://www.youtube.com/watch?v=IERCgdG1_fw)
 
+## Multi Agent
+Start multi agent server:
+
+```
+cd python-agent
+python multi_agent.py --agent-count=2
+```
+Next, open unity-sample-environment and load Scenes/SampleMultiAgent.
+
+
+You can watch reward history:
+
+```
+python plot_reward_log.py --log-file=reward_0.log
+```
 
 ## System Configuration
 
@@ -121,7 +136,7 @@ Set "Time Scale" to 100. This will make simulation more faster, but GUI response
 
 ## License
 + Apache License, Version 2.0
-+ This framework was made by [DWANGO ARTIFICIAL INTELLIGENCE LABORATORY](http://ailab.dwango.co.jp/en/) and lab member [Masayoshi Nakamura](http://masayosshi.com/)
++ Original Developer: [Masayoshi Nakamura](http://masayosshi.com/) ([DWANGO ARTIFICIAL INTELLIGENCE LABORATORY](http://ailab.dwango.co.jp/en/))
 
 ## Notice
 If you created intelligent agents, please let me know about it to "masayoshi_nakamura@dwango.co.jp". We will make showcase varied intelligent agents.

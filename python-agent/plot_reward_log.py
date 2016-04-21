@@ -1,7 +1,13 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import argparse
 
-df = pd.read_csv('reward.log')
+parser = argparse.ArgumentParser()
+parser.add_argument('--log-file', '-l', default='reward.log', type=str,
+                    help='reward log file name')
+args = parser.parse_args()
+
+df = pd.read_csv(args.log_file)
 x = df.columns[0]
 y = df.columns[1]
 ax = df.plot(kind='scatter', x=x, y=y)
