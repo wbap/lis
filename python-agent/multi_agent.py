@@ -1,8 +1,6 @@
 import argparse
-import subprocess
 import six
 from subprocess import Popen
-from time import  sleep
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--port-start', '-p', default='8765', type=int,

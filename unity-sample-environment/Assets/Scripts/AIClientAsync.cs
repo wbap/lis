@@ -1,12 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Threading;
 using MsgPack;
 
-namespace MLPlayer
-{
-	// for sync communication
-	public class AIClient : IAIClient {
+namespace MLPlayer {
+
+	// for async communication
+	public class AIClientAsync : IAIClient {
 		
 		private Queue<byte[]> agentMessageQueue;
 		private Queue<byte[]> aiMessageQueue;
@@ -15,15 +15,11 @@ namespace MLPlayer
 		private Mutex mutAgent;
 		private Mutex mutAi;
 		private MsgPack.CompiledPacker packer;
+		public delegate void OnMessageFunc();
+		OnMessageFunc onMessageFunc;
 		
-		public delegate void MassageCB(byte[] msg, Agent agent);
-		MassageCB messageCallBack;
-		Agent agent;
-		
-		public AIClient (string _url, MassageCB cb, Agent _agent) {
+		public AIClientAsync (string _url) {
 			url = _url;
-			messageCallBack = cb;
-			agent = _agent;
 			mutAgent = new Mutex();
 			mutAi = new Mutex();
 			packer = new MsgPack.CompiledPacker();
@@ -37,8 +33,8 @@ namespace MLPlayer
 			
 			WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket (url);
 			Debug.Log("connecting... " + url);
-
-			ws.OnMessage += (sender, e) => MassageCallBack(e.RawData);
+			
+			ws.OnMessage += (sender, e) => OnMassage(e.RawData);
 			
 			while (true) {
 				ws.Connect ();
@@ -52,32 +48,43 @@ namespace MLPlayer
 					if(data != null) {
 						ws.Send(data);
 					}
-					//Thread.Sleep(0);
+					//Thread.Sleep(8);
 				}
 			}
 		}
 		
-		private void MassageCallBack(byte[] msg) {
-			messageCallBack(msg, agent);
+		private void OnMassage(byte[] msg) {
+			PushAIMessage(msg);
+			if (onMessageFunc != null) {
+				onMessageFunc();
+			}
 		}
-
-		public void PushAIMessage (byte[] msg)
-		{
-			throw new System.NotImplementedException ();
-		}
-
-		public byte[] PopAIMessage ()
-		{
-			throw new System.NotImplementedException ();
-		}
-
+		
 		public void PushAgentState(State s) {
 			byte[] msg = packer.Pack(s);
 			mutAgent.WaitOne();
 			agentMessageQueue.Enqueue(msg);
 			mutAgent.ReleaseMutex();
 		}
-
+		
+		public void PushAIMessage(byte[] msg) {
+			mutAi.WaitOne();
+			aiMessageQueue.Enqueue(msg);
+			mutAi.ReleaseMutex();
+		}
+		
+		public byte[] PopAIMessage() {
+			byte[] received = null;
+			
+			mutAi.WaitOne();
+			if( aiMessageQueue.Count > 0 ) {
+				received = aiMessageQueue.Dequeue();
+			}
+			mutAi.ReleaseMutex();
+			
+			return received;
+		}
+		
 		public byte[] PopAgentState() {
 			byte[] received = null;
 			
@@ -90,5 +97,4 @@ namespace MLPlayer
 			return received;
 		}
 	}
-
 }
