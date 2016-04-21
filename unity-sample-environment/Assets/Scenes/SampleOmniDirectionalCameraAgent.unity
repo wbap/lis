@@ -198,7 +198,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 370758644}
   - 114: {fileID: 370758643}
-  - 114: {fileID: 370758645}
   m_Layer: 0
   m_Name: SceneController
   m_TagString: Untagged
@@ -214,14 +213,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 370758642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8a0d5d1bd73341489981564826c9b64, type: 3}
+  m_Script: {fileID: 11500000, guid: 918e5a34ad71f488ca5767c8009bedf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  url: ws://localhost:8765/ws
+  communicationMode: 1
+  domain: localhost
+  path: ws
+  port: 8765
   cycleTimeStepSize: 0.15
   episodeTimeLength: 15
-  agent: {fileID: 1414357241}
-  environment: {fileID: 2101396359}
+  timeScale: 1
+  agents:
+  - {fileID: 0}
+  environment: {fileID: 0}
 --- !u!4 &370758644
 Transform:
   m_ObjectHideFlags: 0
@@ -234,25 +238,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &370758645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 370758642}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f35cce202312046d8bb7e6e255e6cc37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  domain: localhost
-  path: ws
-  port: 8765
-  cycleTimeStepSize: 0.15
-  episodeTimeLength: 15
-  timeScale: 1
-  agents: []
-  environment: {fileID: 2101396359}
 --- !u!1 &644654425
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,12 +408,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 644654426}
   m_RootOrder: 2
---- !u!114 &1414357241 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11462060, guid: 8b42c37fb727d4dacbb23ed579832205,
-    type: 2}
-  m_PrefabInternal: {fileID: 1683281777}
-  m_Script: {fileID: 11500000, guid: 2b2b14c64040d407698d66027d1adbf2, type: 3}
 --- !u!1001 &1683281777
 Prefab:
   m_ObjectHideFlags: 0

@@ -4,16 +4,16 @@ using System.Threading;
 using MsgPack;
 
 namespace MLPlayer {
-	public class SceneControllerAsync : MonoBehaviour {
+	public class SceneController : MonoBehaviour {
 
 		// singleton
-		protected static SceneControllerAsync instance;
-		public static SceneControllerAsync Instance {
+		protected static SceneController instance;
+		public static SceneController Instance {
 			get {
 				if(instance == null) {
-					instance = (SceneControllerAsync) FindObjectOfType(typeof(SceneControllerAsync));
+					instance = (SceneController) FindObjectOfType(typeof(SceneController));
 					if (instance == null) {
-						Debug.LogError("An instance of " + typeof(SceneControllerAsync) + 
+						Debug.LogError("An instance of " + typeof(SceneController) + 
 						               " is needed in the scene, but there is none.");
 					}
 				}
