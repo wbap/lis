@@ -228,8 +228,8 @@ MonoBehaviour:
   episodeTimeLength: 15
   timeScale: 1
   agents:
-  - {fileID: 0}
-  environment: {fileID: 0}
+  - {fileID: 1653038482}
+  environment: {fileID: 2101396359}
 --- !u!4 &370758644
 Transform:
   m_ObjectHideFlags: 0
@@ -454,6 +454,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7807d5793a14e43459d66a7063f42614, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1653038482 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11469880, guid: 7807d5793a14e43459d66a7063f42614,
+    type: 2}
+  m_PrefabInternal: {fileID: 1653038481}
+  m_Script: {fileID: 11500000, guid: 2b2b14c64040d407698d66027d1adbf2, type: 3}
 --- !u!1001 &1796151572
 Prefab:
   m_ObjectHideFlags: 0

@@ -225,7 +225,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 370758642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f35cce202312046d8bb7e6e255e6cc37, type: 3}
+  m_Script: {fileID: 11500000, guid: 918e5a34ad71f488ca5767c8009bedf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   communicationMode: 1
@@ -236,7 +236,7 @@ MonoBehaviour:
   episodeTimeLength: 15
   timeScale: 1
   agents:
-  - {fileID: 2078493469}
+  - {fileID: 1215490705}
   - {fileID: 1554415787}
   environment: {fileID: 2101396359}
 --- !u!1 &644654425
@@ -489,6 +489,12 @@ Camera:
   m_PrefabParentObject: {fileID: 2015576, guid: 7807d5793a14e43459d66a7063f42614,
     type: 2}
   m_PrefabInternal: {fileID: 1215490701}
+--- !u!114 &1215490705 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11469880, guid: 7807d5793a14e43459d66a7063f42614,
+    type: 2}
+  m_PrefabInternal: {fileID: 1215490701}
+  m_Script: {fileID: 11500000, guid: 2b2b14c64040d407698d66027d1adbf2, type: 3}
 --- !u!1001 &1554415783
 Prefab:
   m_ObjectHideFlags: 0
@@ -662,12 +668,6 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 445476, guid: 4ecd053992cf34b58866b793d44e5a99, type: 2}
   m_PrefabInternal: {fileID: 182423480}
---- !u!114 &2078493469 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11469880, guid: 7807d5793a14e43459d66a7063f42614,
-    type: 2}
-  m_PrefabInternal: {fileID: 1215490701}
-  m_Script: {fileID: 11500000, guid: 2b2b14c64040d407698d66027d1adbf2, type: 3}
 --- !u!1 &2101396357
 GameObject:
   m_ObjectHideFlags: 0
