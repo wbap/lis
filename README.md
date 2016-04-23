@@ -105,13 +105,11 @@ python plot_reward_log.py --log-file=reward_0.log
 
 ## Tips
 ### Simulate faster
+Select "SceneController" in Hierarchy tab and change "Time Scale". 
 
-<img width="400" alt="screenshot" src="https://cloud.githubusercontent.com/assets/1708549/14313279/9aa6b66c-fc2b-11e5-915e-796348fbcdec.png">
+<img width="292" alt="2016-04-23 15 52 03" src="https://cloud.githubusercontent.com/assets/1708549/14759823/631807d0-096b-11e6-9dc9-d2cc4280aee7.png">
 
-Set "Time Scale" to 100. This will make simulation more faster, but GUI response will be very slow.
-<img width="250" alt="2016-04-06 19 06 50" src="https://cloud.githubusercontent.com/assets/1708549/14313288/aa9aab28-fc2b-11e5-8965-b69b0ecef151.png">
->
-
+This will make simulation more faster, but it will be slow gui response.
 
 ## Algorithm Reference 
 + Mnih, V. et al. Human-level control through deep reinforcement learning. Nature 518, 529–533 (2015)
