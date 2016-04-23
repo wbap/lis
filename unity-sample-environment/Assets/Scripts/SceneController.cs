@@ -76,6 +76,12 @@ namespace MLPlayer {
 			lastSendTime = -cycleTimeStepSize;
 			
 			mutAgent = new Mutex();
+
+			if (communicationMode == CommunicationMode.ASYNC && agents.Count > 1) {
+				Debug.LogError ("not supprted multi agent ASYNC mode");
+				throw new System.NotImplementedException ();
+				Application.Quit();
+			}
 		}
 		
 		void OnMessage(byte[] msg, Agent agent) {

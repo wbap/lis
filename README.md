@@ -6,7 +6,15 @@
 ## Algorithm
 <img width="371" alt="2016-04-08 19 00 14" src="https://cloud.githubusercontent.com/assets/1708549/14380751/2fec7856-fdbc-11e5-9ac0-17650fc74f34.png">
 
-## Requirements:
+### Algorithm Reference 
++ Mnih, V. et al. Human-level control through deep reinforcement learning. Nature 518, 529–533 (2015)
+ + http://www.nature.com/nature/journal/v518/n7540/abs/nature14236.html
+ + [DQN-chainer](https://github.com/ugo-nama-kun/DQN-chainer)
+ 
++ A. Krizhevsky, I. Sutskever, and G. Hinton. ImageNet classification with deep convolutional neural networks. In NIPS, 2012.
+ + [Caffe Model Zoo](https://github.com/BVLC/caffe/wiki/Model-Zoo)
+  
+## Requirements
 - python 2.7
 
 ## Install
@@ -80,6 +88,8 @@ This graph is a "sample" scene result. It takes about 6 hours on GPU Machine.
 [SampleLikesAndDislikes scene result movie](https://www.youtube.com/watch?v=IERCgdG1_fw)
 
 ## Multi Agent
+This is supported only SYNC mode. ASYNC mode is not supprted.
+ 
 Start multi agent server:
 
 ```
@@ -111,13 +121,6 @@ Select "SceneController" in Hierarchy tab and change "Time Scale".
 
 This will make simulation more faster, but it will be slow gui response.
 
-## Algorithm Reference 
-+ Mnih, V. et al. Human-level control through deep reinforcement learning. Nature 518, 529–533 (2015)
- + http://www.nature.com/nature/journal/v518/n7540/abs/nature14236.html
- + [DQN-chainer](https://github.com/ugo-nama-kun/DQN-chainer)
- 
-+ A. Krizhevsky, I. Sutskever, and G. Hinton. ImageNet classification with deep convolutional neural networks. In NIPS, 2012.
- + [Caffe Model Zoo](https://github.com/BVLC/caffe/wiki/Model-Zoo)
 
 ## Module Reference
 
