@@ -14,7 +14,7 @@ namespace MLPlayer {
 		private Thread th;
 		private Mutex mutAgent;
 		private Mutex mutAi;
-		private MsgPack.CompiledPacker packer;
+		private MessageSerializer msgSerializer;
 		public delegate void OnMessageFunc();
 		OnMessageFunc onMessageFunc;
 		
@@ -22,7 +22,7 @@ namespace MLPlayer {
 			url = _url;
 			mutAgent = new Mutex();
 			mutAi = new Mutex();
-			packer = new MsgPack.CompiledPacker();
+			msgSerializer = new MessageSerializer();
 			agentMessageQueue = new Queue<byte[]>();
 			aiMessageQueue = new Queue<byte[]>();
 			th = new Thread(new ThreadStart(ExecuteInForeground));
@@ -61,7 +61,7 @@ namespace MLPlayer {
 		}
 		
 		public void PushAgentState(State s) {
-			byte[] msg = packer.Pack(s);
+			byte[] msg = msgSerializer.Pack(s);
 			mutAgent.WaitOne();
 			agentMessageQueue.Enqueue(msg);
 			mutAgent.ReleaseMutex();
