@@ -137,7 +137,7 @@ This will make simulation more faster, but it will be slow gui response.
 
 ## License
 + Apache License, Version 2.0
-+ Original Developer: [Masayoshi Nakamura](http://masayosshi.com/) ([DWANGO ARTIFICIAL INTELLIGENCE LABORATORY](http://ailab.dwango.co.jp/en/))
++ Original Developer: ([DWANGO ARTIFICIAL INTELLIGENCE LABORATORY](http://ailab.dwango.co.jp/en/))
 
 ## Notice
 If you created intelligent agents, please let me know about it to "masayoshi_nakamura@dwango.co.jp". We will make showcase varied intelligent agents.
