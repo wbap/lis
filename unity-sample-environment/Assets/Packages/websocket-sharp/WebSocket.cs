@@ -1697,6 +1697,9 @@ namespace WebSocketSharp
         _stream = _tcpClient.GetStream ();
       }
 
+      //20160707 added by quadjr
+      _tcpClient.NoDelay = true;
+
       if (_secure) {
         var conf = SslConfiguration;
         var host = conf.TargetHost;
