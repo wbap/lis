@@ -7,7 +7,6 @@ namespace MLPlayer
 {
 	// for sync communication
 	public class AIClient : IAIClient {
-		
 		private Queue<byte[]> agentMessageQueue;
 		private Queue<byte[]> aiMessageQueue;
 		private string url;
@@ -86,7 +85,7 @@ namespace MLPlayer
 				received = agentMessageQueue.Dequeue();
 			}
 			mutAgent.ReleaseMutex();
-			
+
 			return received;
 		}
 	}

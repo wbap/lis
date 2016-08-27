@@ -23,7 +23,6 @@ namespace MLPlayer {
 
 		enum CommunicationMode {ASYNC, SYNC}
 		[SerializeField] CommunicationMode communicationMode;
-
 		[SerializeField] string domain;
 		[SerializeField] string path;
 		[SerializeField] int port;
@@ -40,7 +39,7 @@ namespace MLPlayer {
 		private float episodeStartTime = 0f;
 		private int agentReceiveCounter;
 		MsgPack.BoxingPacker packer = new MsgPack.BoxingPacker ();
-		
+	
 		public static ManualResetEvent received = new ManualResetEvent(false);
 		private Mutex mutAgent;
 
@@ -83,7 +82,7 @@ namespace MLPlayer {
 				Application.Quit();
 			}
 		}
-		
+
 		void OnMessage(byte[] msg, Agent agent) {
 			mutAgent.WaitOne();
 			agentReceiveCounter++;

@@ -38,7 +38,6 @@ namespace MLPlayer {
 			
 			while (true) {
 				ws.Connect ();
-				
 				while (!ws.IsConnected) {
 					Thread.Sleep(1000);
 				}

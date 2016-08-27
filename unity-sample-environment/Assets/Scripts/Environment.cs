@@ -7,6 +7,7 @@ namespace MLPlayer {
 		int itemCount = 10;
 		float areaSize = 10;
 		[SerializeField] List<GameObject> itemPrefabs;
+	
 
 		// Use this for initialization
 		void Start () {

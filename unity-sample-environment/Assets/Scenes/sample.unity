@@ -253,6 +253,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 568119339}
   - 114: {fileID: 568119338}
+  - 114: {fileID: 568119341}
   m_Layer: 0
   m_Name: AIServer_Check
   m_TagString: Untagged
@@ -284,6 +285,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+--- !u!114 &568119341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 568119337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b45c0a9fd5273415f8356330cdb17218, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 2078493469}
 --- !u!1 &644654425
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,7 +539,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11469880, guid: 7807d5793a14e43459d66a7063f42614, type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11466276, guid: 7807d5793a14e43459d66a7063f42614, type: 2}
       propertyPath: m_Enabled
