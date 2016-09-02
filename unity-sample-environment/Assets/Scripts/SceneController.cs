@@ -170,7 +170,7 @@ namespace MLPlayer {
 					
 					for (int i = 0; i < agents.Count; i++) {
 						agents [i].UpdateState ();
-						clients [i].PushAgentState (agents [i].state);
+						//clients [i].PushAgent(agents [i].state);
 					}
 					Time.timeScale = 0.0f;
 				}

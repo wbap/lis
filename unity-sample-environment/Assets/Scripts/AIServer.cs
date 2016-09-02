@@ -11,26 +11,40 @@ namespace MLPlayer
 	public class AIServer : MonoBehaviour
 	{
 		private WebSocketServer wssv;
-						
-		//更新(8/27)
+		                                           //*******************************************************
+		private Queue<byte[]> agentMessageQueue;  //ここのagentMessageQueueのデータを下にあるクラスのCommuncationGymに持っていきたい
+		private Queue<byte[]> aiMessageQueue;     //*******************************************************
+		public Agent agent;
+		private MsgPack.CompiledPacker packer;
+
+		public AIServer (Agent _agent) {
+			packer = new MsgPack.CompiledPacker();
+			agentMessageQueue = new Queue<byte[]>();
+			aiMessageQueue = new Queue<byte[]>();
+			agent = _agent;
+		}
+			
 		public class CommunicationGym : WebSocketBehavior
 		{
-			public Action action { set; get; }
-			public State CheckMSG = new State ();  //メッセージパックで送信できるかの確認（中身は空）
+			public Agent agent { set; get; }
+			public State CheckMSG = new State ();  
  			MsgPack.BoxingPacker packer = new MsgPack.BoxingPacker ();
 
-		
+			//*******************************************
+			//private Queue<byte[]> agentMessageQueue; こうすると当然別のキューが作成されてしまう...
+			//*******************************************
+
+
 			protected override void OnMessage (MessageEventArgs e)
 			{
-				action = new Action ();
-
 				//receive message from GYM
-				action.Set((Dictionary<System.Object,System.Object>)packer.Unpack (e.RawData));
-				Debug.Log ("Rotate="+action.rotate+" Forword="+action.forward+" Jump="+action.jump);
+				agent.action.Set((Dictionary<System.Object,System.Object>)packer.Unpack (e.RawData));
+				Debug.Log ("Rotate="+agent.action.rotate+" Forword="+agent.action.forward+" Jump="+agent.action.jump);
 
-				//CommunicationGymではStateデータを読み込めない...
-				//ここにStateデータを持ってきたい....
-				//他クラスのデータ参照ができれば良いが...
+
+				//byte[] data = PopAgentState();
+				//Send (data);
+
 
 				SendMessage (CheckMSG);
 			}
@@ -46,16 +60,22 @@ namespace MLPlayer
 			{
 				Debug.Log ("Socket Open");
 			}
+
+		
+		}
+
+		CommunicationGym instantiate() {
+			CommunicationGym service = new CommunicationGym();
+			service.agent = agent;
+			return service;
 		}
 
 		void Awake ()
 		{
 			wssv = new WebSocketServer ("ws://localhost:" + 4649);
-			//wssv.WaitTime = TimeSpan.FromSeconds (2);
-			wssv.AddWebSocketService<CommunicationGym> ("/CommunicationGym");
+			wssv.AddWebSocketService<CommunicationGym> ("/CommunicationGym", instantiate);
 			wssv.Start ();
-		
-	
+
 			if (wssv.IsListening) {
 				Debug.Log ("Listening on port " + wssv.Port + ", and providing WebSocket services:");
 				foreach (var path in wssv.WebSocketServices.Paths)
@@ -63,6 +83,30 @@ namespace MLPlayer
 			}
 		}
 
+		public void PushAIMessage (byte[] msg)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public byte[] PopAIMessage ()
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public void PushAgentState(State s) {
+			byte[] msg = packer.Pack(s);     //*********************************
+			agentMessageQueue.Enqueue(msg);  //キューには画像データが入っていることを確認済み
+		}                          
+
+		public byte[] PopAgentState() {
+			byte[] received = null;
+			if( agentMessageQueue.Count > 0 ) {
+				received = agentMessageQueue.Dequeue();
+			}
+
+			return received;
+		}
+			
 		void OnApplicationQuit ()
 		{
 			wssv.Stop ();

@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e698a12d712bc474997a622fc5c911f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 2078493469}
 --- !u!4 &568119339
 Transform:
   m_ObjectHideFlags: 0
@@ -543,7 +544,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11466276, guid: 7807d5793a14e43459d66a7063f42614, type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7807d5793a14e43459d66a7063f42614, type: 2}
