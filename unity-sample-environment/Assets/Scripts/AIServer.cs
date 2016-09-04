@@ -40,9 +40,22 @@ namespace MLPlayer
 				agent.action.Set ((Dictionary<System.Object,System.Object>)packer.Unpack (e.RawData));
 				SceneController.received.Set ();
 				Debug.Log ("Rotate=" + agent.action.rotate + " Forword=" + agent.action.forward + " Jump=" + agent.action.jump);
-
 				SendFlag = false;
 
+				//send state data 
+				Sendmessage();
+			}
+
+			protected override void OnOpen ()
+			{
+				Debug.Log ("Socket Open");
+
+				SceneController.received.Set ();
+				Sendmessage ();
+			}
+
+			private void Sendmessage(){
+				SendFlag = false;
 				//send state data 
 				while (SendFlag == false) {
 					if (SceneController.server.agentMessageQueue.Count > 0) {
@@ -52,11 +65,7 @@ namespace MLPlayer
 					}
 				}
 			}
-
-			protected override void OnOpen ()
-			{
-				Debug.Log ("Socket Open");
-			}
+				
 		}
 
 		CommunicationGym instantiate ()
@@ -71,6 +80,7 @@ namespace MLPlayer
 			wssv = new WebSocketServer ("ws://localhost:" + 4649);
 			wssv.AddWebSocketService<CommunicationGym> ("/CommunicationGym", instantiate);
 			wssv.Start ();
+
 
 			if (wssv.IsListening) {
 				Debug.Log ("Listening on port " + wssv.Port + ", and providing WebSocket services:");
