@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System;
 using System.Collections.Generic;
 using WebSocketSharp;
@@ -12,7 +13,9 @@ namespace MLPlayer
 	public class AIServer : MonoBehaviour
 	{
 		private WebSocketServer wssv;
-		                                          
+
+		[SerializeField] string domain;
+		[SerializeField] int port;                                          
 		public Queue<byte[]> agentMessageQueue;
 		private Queue<byte[]> aiMessageQueue;
 		private Mutex mutAgent;
@@ -32,7 +35,7 @@ namespace MLPlayer
 		{
 			public Agent agent { set; get; }
 			MsgPack.BoxingPacker packer = new MsgPack.BoxingPacker ();
-			private bool SendFlag=false;
+			private bool SendFlag=true;
 
 			protected override void OnMessage (MessageEventArgs e)
 			{
@@ -40,7 +43,6 @@ namespace MLPlayer
 				agent.action.Set ((Dictionary<System.Object,System.Object>)packer.Unpack (e.RawData));
 				SceneController.received.Set ();
 				Debug.Log ("Rotate=" + agent.action.rotate + " Forword=" + agent.action.forward + " Jump=" + agent.action.jump);
-				SendFlag = false;
 
 				//send state data 
 				Sendmessage();
@@ -49,23 +51,27 @@ namespace MLPlayer
 			protected override void OnOpen ()
 			{
 				Debug.Log ("Socket Open");
-
 				SceneController.received.Set ();
 				Sendmessage ();
 			}
 
+			protected override void OnClose(CloseEventArgs e)
+			{
+				SceneController.FinishFlag=true;
+				SceneController.received.Set ();
+			}
+				
 			private void Sendmessage(){
-				SendFlag = false;
+				SendFlag = true;
 				//send state data 
-				while (SendFlag == false) {
+				while (SendFlag == true) {
 					if (SceneController.server.agentMessageQueue.Count > 0) {
 						byte[] data = SceneController.server.PopAgentState ();
 						Send (data);
-						SendFlag = true;
+						SendFlag = false;
 					}
 				}
 			}
-				
 		}
 
 		CommunicationGym instantiate ()
@@ -75,9 +81,14 @@ namespace MLPlayer
 			return service;
 		}
 
+		string GetUrl(string domain,int port){
+			return "ws://" + domain + ":" + port.ToString ();
+		}
+
 		void Awake ()
 		{
-			wssv = new WebSocketServer ("ws://localhost:" + 4649);
+			Debug.Log (GetUrl(domain,port));
+			wssv = new WebSocketServer (GetUrl(domain,port));
 			wssv.AddWebSocketService<CommunicationGym> ("/CommunicationGym", instantiate);
 			wssv.Start ();
 

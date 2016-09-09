@@ -222,6 +222,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e698a12d712bc474997a622fc5c911f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  domain: localhost
+  port: 4649
   agent: {fileID: 2078493469}
 --- !u!4 &370758644
 Transform:
@@ -247,6 +249,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 918e5a34ad71f488ca5767c8009bedf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  domain: localhost
+  port: 4649
   cycleTimeStepSize: 0.15
   episodeTimeLength: 15
   timeScale: 1
