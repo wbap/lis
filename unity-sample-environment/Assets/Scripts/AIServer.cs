@@ -46,6 +46,7 @@ namespace MLPlayer
 
 				//send state data 
 				Sendmessage();
+			
 			}
 
 			protected override void OnOpen ()
