@@ -1,6 +1,6 @@
 chainer
-ws4py
-cherrypy
+websocket-client
+gym
 msgpack-python
 pillow
 argparse
