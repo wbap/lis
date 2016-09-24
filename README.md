@@ -90,6 +90,12 @@ This graph is a "sample" scene result. It takes about 6 hours on GPU Machine.
 
 [SampleLikesAndDislikes scene result movie](https://www.youtube.com/watch?v=IERCgdG1_fw)
 
+## Examples
+
+See the examples directory
+- Run examples/agents/Lis_random.py to run an simple random agent
+- Run examples/agents/Lis_dqn.py to run an Deep Q-Network agent
+
 ## System Configuration
 
 - Client: python module(gym)
@@ -119,6 +125,14 @@ This will make simulation more faster, but it will be slow gui response.
  + The MIT License (MIT)
  + Assets/Packages/websocket-sharp
 
++ websocket-client
+ + Copyright (C) 2010 Hiroki Ohtani(liris)
+ + LGPL License 
+
++ gym
+ + Copyright (c) 2016 OpenAI (http://openai.com)
+ + The MIT License (MIT) 
+ + LIS-ver2/gym_client/gym 
 
 ## License
 + Apache License, Version 2.0
