@@ -46,12 +46,12 @@ class CnnDqnAgent(object):
         self.q_net_input_dim = self.image_feature_dim * self.image_feature_count + self.depth_image_dim
 
         if os.path.exists(self.cnn_feature_extractor):
-            print("loading... " + self.cnn_feature_extractor),
+            print("loading... " + self.cnn_feature_extractor)
             self.feature_extractor = pickle.load(open(self.cnn_feature_extractor))
             print("done")
         else:
             self.feature_extractor = CnnFeatureExtractor(self.use_gpu, self.model, self.model_type, self.image_feature_dim)
-            pickle.dump(self.feature_extractor, open(self.cnn_feature_extractor, 'w'))
+            pickle.dump(self.feature_extractor, open(self.cnn_feature_extractor, 'wb'),-1)
             print("pickle.dump finished")
 
         self.time = 0

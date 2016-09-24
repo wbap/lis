@@ -32,20 +32,19 @@ while episode_count <= total_episode:
 
         env = gym.make('Lis-v2')
 
-        observation = env.reset()  # 環境の初期化 ー,①
-        action = agent.agent_start(observation)  # オブザベーションをもらったのでエージェントスタート
-        observation, reward, end_episode, _ = env.step(action)  # アクション決定、送信　⑴、②
+        observation = env.reset()
+        action = agent.agent_start(observation)
+        observation, reward, end_episode, _ = env.step(action)
 
         with open(log_file, 'w') as the_file:
             the_file.write('cycle, episode_reward_sum \n')
     else:
-        cycle_counter += 1  # 報酬計算
+        cycle_counter += 1
         reward_sum += reward
 
         if end_episode:
             agent.agent_end(reward)
 
-            # 次のエピソードに向けての処理
             action = agent.agent_start(observation)  # TODO
             observation, reward, end_episode, _ = env.step(action)
 
@@ -56,8 +55,8 @@ while episode_count <= total_episode:
             episode_count += 1
 
         else:
-            action, eps, q_now, obs_array = agent.agent_step(reward, observation)  # ②
+            action, eps, q_now, obs_array = agent.agent_step(reward, observation)
             agent.agent_step_update(reward, action, eps, q_now, obs_array)
-            observation, reward, end_episode, _ = env.step(action)  # ⑵、③
+            observation, reward, end_episode, _ = env.step(action)
 
 env.close()

@@ -8,13 +8,15 @@ from PIL import Image
 from PIL import ImageOps
 from gym import spaces
 import numpy as np
+import time
+
 
 class GymUnityEnv(gym.Env):
 
-    def __init__(self): #環境が作られたとき
+    def __init__(self):
         websocket.enableTrace(True)
     	self.ws = websocket.create_connection("ws://localhost:4649/CommunicationGym")
-        self.action_space = spaces.Discrete(3)  # 3つのアクションをセット
+        self.action_space = spaces.Discrete(3)
         self.depth_image_dim = 32 * 32
         self.depth_image_count = 1
         self.observation, _, _ = self.receive()
@@ -25,10 +27,10 @@ class GymUnityEnv(gym.Env):
 
 
 
-    def step(self, action):  # ステップ処理 、actionを外から受け取る
+    def step(self, action):
 
-        actiondata = msgpack.packb({"command": str(action)})  # アクションをpack
-        self.ws.send(actiondata)  # 送信
+        actiondata = msgpack.packb({"command": str(action)})
+        self.ws.send(actiondata)
 
         # Unity Process
 
@@ -37,26 +39,30 @@ class GymUnityEnv(gym.Env):
         return observation, reward, end_episode, {}
 
     def receive(self):
-        statedata = self.ws.recv()  # 状態の受信
-        state = msgpack.unpackb(statedata)  # 受け取ったデータをunpack
 
-        image = []
-        for i in xrange(self.depth_image_count):
-            image.append(Image.open(io.BytesIO(bytearray(state['image'][i]))))
-        depth = []
-        for i in xrange(self.depth_image_count):
-            d = (Image.open(io.BytesIO(bytearray(state['depth'][i]))))
+        while True:
 
-            #d.save('stephoge.png')
+            statedata = self.ws.recv()
 
-            depth.append(np.array(ImageOps.grayscale(d)).reshape(self.depth_image_dim))
+            if not statedata:
+                continue
 
-        observation = {"image": image, "depth": depth}
-        reward = state['reward']
-        end_episode = state['endEpisode']
+            state = msgpack.unpackb(statedata)
 
-        return observation, reward, end_episode
+            image = []
+            for i in xrange(self.depth_image_count):
+                image.append(Image.open(io.BytesIO(bytearray(state['image'][i]))))
+            depth = []
+            for i in xrange(self.depth_image_count):
+                d = (Image.open(io.BytesIO(bytearray(state['depth'][i]))))
+                depth.append(np.array(ImageOps.grayscale(d)).reshape(self.depth_image_dim))
 
+            observation = {"image": image, "depth": depth}
+            reward = state['reward']
+            end_episode = state['endEpisode']
 
-    def close(self):  # コネクション終了処理
-        self.ws.close()  # コネクション終了
+            return observation, reward, end_episode
+            break
+
+    def close(self):
+        self.ws.close()
