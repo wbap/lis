@@ -11,7 +11,7 @@ namespace MLPlayer {
 				gameObject.SetActive (false);
 				Debug.Log ("ResetEvent reward:" + reward.ToString ());
 
-				SceneController.Instance.TimeOver();
+				SceneController.Instance.TimeOver ();
 			}
 		}
 		

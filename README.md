@@ -1,10 +1,13 @@
-# LIS (Life in Silico)
+# LIS (Life in Silico) ver2
 =============
+LIS (Life In Silico) is a framework that makes intelligent agents _live_ in a virtual environment.  
+LIS version 2 uses [Unity Game Engine](https://unity3d.com) for the virtual environment and [OpenAI Gym](https://gym.openai.com) for the learning agent framework.
+
 
 ![screenshot](https://cloud.githubusercontent.com/assets/1708549/14311902/c6ce61ec-fc24-11e5-8018-5e3aaf98b6d3.png)
 
 ## Algorithm
-<img width="371" alt="2016-04-08 19 00 14" src="https://cloud.githubusercontent.com/assets/1708549/14380751/2fec7856-fdbc-11e5-9ac0-17650fc74f34.png">
+<img width="470" alt="Lisv2algorithm" src="https://cloud.githubusercontent.com/assets/21034484/18500782/accc85a0-7a85-11e6-8957-cfc9cd87fdc6.png">
 
 ### Algorithm Reference 
 + Mnih, V. et al. Human-level control through deep reinforcement learning. Nature 518, 529–533 (2015)
@@ -56,25 +59,25 @@ download data:
 ./fetch.sh
 ```
 
-Next, run python module as a server.
-
-```
-cd python-agent
-python server.py
-```
-
 Open unity-sample-environment with Unity and load Scenes/Sample.
 
-![screenshot from 2016-04-06 18 08 31](https://cloud.githubusercontent.com/assets/1708549/14311462/990e607e-fc22-11e5-84cf-26c049482afc.png)
+![2016-09-13 10 27 53](https://cloud.githubusercontent.com/assets/21034484/18458591/0d40c912-799d-11e6-88da-5af8018fc784.png)
 
-Press Start Buttn. This will take a few minuts for loading caffe model.
+Press Start Button. 
 
-![screenshot from 2016-04-06 18 09 36](https://cloud.githubusercontent.com/assets/1708549/14311518/c309f8f2-fc22-11e5-937c-abd0d227d307.png)
+![2016-09-13 10 28 14](https://cloud.githubusercontent.com/assets/21034484/18458604/342c6eaa-799d-11e6-987b-cbc06b00f497.png)
+
+Next, run python module as a client.This will take a few minutes for loading caffe model.
+
+```
+cd gym_client/examples/agents
+PYTHONPATH=../../ python Lis_dqn.py
+```
 
 You can watch reward history:
 
 ```
-cd python-agent
+cd gym_client/examples/agents
 python plot_reward_log.py
 ```
 
@@ -87,31 +90,19 @@ This graph is a "sample" scene result. It takes about 6 hours on GPU Machine.
 
 [SampleLikesAndDislikes scene result movie](https://www.youtube.com/watch?v=IERCgdG1_fw)
 
-## Multi Agent
-This is supported only SYNC mode. ASYNC mode is not supprted.
- 
-Start multi agent server:
+## Examples
 
-```
-cd python-agent
-python multi_agent.py --agent-count=2
-```
-Next, open unity-sample-environment and load Scenes/SampleMultiAgent.
-
-
-You can watch reward history:
-
-```
-python plot_reward_log.py --log-file=reward_0.log
-```
+See the examples directory
+- Run examples/agents/Lis_random.py to run an simple random agent
+- Run examples/agents/Lis_dqn.py to run an Deep Q-Network agent
 
 ## System Configuration
 
-- Client: Unity
-- Server: python module
+- Client: python module(gym)
+- Server: Unity
 - Communication: Socket (WebSocket over TCP) using MessagePack
 
-<img width="300" alt="2016-04-09 4 14 49" src="https://cloud.githubusercontent.com/assets/1708549/14394932/bbd77756-fe09-11e5-89ba-da7834c2a39e.png">
+<img width="300" alt="2016-04-09 4 14 49" src="https://cloud.githubusercontent.com/assets/21034484/18440301/9265bbf2-7943-11e6-93a5-93d49d98f8d6.png">
 
 ## Tips
 ### Simulate faster
@@ -134,6 +125,14 @@ This will make simulation more faster, but it will be slow gui response.
  + The MIT License (MIT)
  + Assets/Packages/websocket-sharp
 
++ websocket-client
+ + Copyright (C) 2010 Hiroki Ohtani(liris)
+ + LGPL License 
+
++ gym
+ + Copyright (c) 2016 OpenAI (http://openai.com)
+ + The MIT License (MIT) 
+ + LIS-ver2/gym_client/gym 
 
 ## License
 + Apache License, Version 2.0
