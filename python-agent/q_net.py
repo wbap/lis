@@ -136,8 +136,8 @@ class QNet:
             self.optimizer.update()
 
     def q_func(self, state):
-        h4 = F.relu(self.model.l4(state))
-        q = self.model.q_value(h4 / 255.0)
+        h4 = F.relu(self.model.l4(state / 255.0))
+        q = self.model.q_value(h4)
         return q
 
     def q_func_target(self, state):
