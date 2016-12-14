@@ -12,7 +12,8 @@ namespace MLPlayer {
 		[SerializeField] List<Texture2D> depthImages;
 
 		public Action action { set; get; }
-		public State state { set; get; }
+		public State state { set; get;}
+
 
 		public void AddReward (float reward)
 		{
@@ -34,7 +35,7 @@ namespace MLPlayer {
 				state.depth[i] = GetCameraImage (depthCameras[i], ref txture);
 			}
 		}
-		
+			
 		public void ResetState ()
 		{
 			state.Clear ();
@@ -42,18 +43,19 @@ namespace MLPlayer {
 
 		public void StartEpisode ()
 		{
-			
+	
 		}
 
 		public void EndEpisode ()
 		{
 			state.endEpisode = true;
 		}
-
+			
 		public void Start() {
+
 			action = new Action ();
 			state = new State ();
-
+		
 			rgbImages = new List<Texture2D> (rgbCameras.Capacity);
 			foreach (var cam in rgbCameras) {
 				rgbImages.Add (new Texture2D (cam.targetTexture.width, cam.targetTexture.height,
@@ -70,7 +72,6 @@ namespace MLPlayer {
 				cam.SetReplacementShader (Shader.Find ("Custom/ReplacementShader"), "");
 			}
 		}
-
 
 		public byte[] GetCameraImage(Camera cam, ref Texture2D tex) {
 			RenderTexture currentRT = RenderTexture.active;
