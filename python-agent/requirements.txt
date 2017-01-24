@@ -1,6 +1,6 @@
 chainer
 ws4py
-cherrypy
+cherrypy<9.0.0
 msgpack-python
 pillow
 argparse
